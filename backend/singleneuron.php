@@ -5,6 +5,16 @@ class neuron
     private array $weight;
     private float $bias;
 
+    public function setBias(float $bias): void
+    {
+        $this->bias = $bias;
+    }
+
+    public function getBias(): float
+    {
+        return $this->bias;
+    }
+
     public function __construct()
     {
         $this->weight = [
