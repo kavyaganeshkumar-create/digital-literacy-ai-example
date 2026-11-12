@@ -3,6 +3,7 @@
 class neuron
 {
     private array $weight;
+    private float $bias;
 
     public function __construct()
     {
@@ -11,6 +12,8 @@ class neuron
             (2 * mt_rand() / mt_getrandmax()) - 1,
             (2 * mt_rand() / mt_getrandmax()) - 1
         ];
+
+        $this->bias = 0.0;
     }
 
     private function tanh(float $x): float
@@ -25,7 +28,10 @@ class neuron
 
     public function predict(array $inputs): float
     {
-        $sum = 0;
+        if (count($inputs) != 3) {
+            die("Neuron needs 3 inputs");
+        }
+        $sum = $this->bias;
 
         for ($i = 0; $i < count($inputs); $i++) {
             $sum += $inputs[$i] * $this->weight[$i];
@@ -40,6 +46,7 @@ class neuron
 
         for ($round = 0; $round < $iterations; $round++) {
             $adjustments = [0, 0, 0];
+            $biasadjustment = 0.0;
 
             for ($sample = 0; $sample < $samplecount; $sample++) {
                 $inputs = $traininginps[$sample];
@@ -54,11 +61,15 @@ class neuron
                 for ($i = 0; $i < 3; $i++) {
                     $adjustments[$i] += $inputs[$i] * $delta;
                 }
+
+                $biasadjustment += $delta;
             }
 
             for ($i = 0; $i < 3; $i++) {
                 $this->weight[$i] += $learningrate * ($adjustments[$i] / $samplecount);
             }
+
+            $this->bias += $learningrate * ($biasadjustment / $samplecount);
         }
     }
 }
