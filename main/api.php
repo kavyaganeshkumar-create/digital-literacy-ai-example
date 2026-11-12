@@ -9,6 +9,9 @@ $traininginp = $data['traininginp'];
 $trainingout = $data['trainingout'];
 $bias = $data['bias'];
 
-foreach($traininginp as $input) {
-    $neuron->train($input[0], $input[1], $input[2]);
-}
+$neuron->setBias($bias);
+$neuron->train($traininginp, $trainingout, 50000000000000);
+
+echo json_encode([
+    'bias' => $neuron->getBias()
+]);
